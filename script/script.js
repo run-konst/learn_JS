@@ -1,77 +1,29 @@
 'use strict';
 
-let 
-    money,
-    expenses = [];
+const isNumber = function (n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+};
 
-const 
-    isNumber = function (n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    },
-    start = function () {
-        do {
-            money = prompt('Ваш месячный доход?');
-        } while (!isNumber(money));
-        money = Number(money);        
-    };
-
-start();
-
-const    
-    income = 'Фриланс',
-    addExpenses = prompt('Перечислите возможные расходы за рассчитываемый период через запятую'),
-    deposit = confirm('Есть ли у вас депозит в банке?'),
-    mission = 100000,
-    showTypeOf = function (data) {
-        return typeof data;    
-    },
-    getExpensesMonth = function () {
-        let sum = 0;
-        let expense;
-        for (let i = 0; i < 2; i++) {
-            expenses[i] = prompt('Введите обязательную статью расходов');
-            do {
-                expense = prompt('Во сколько это обойдется?');
-            } while (!isNumber(expense));
-            expense = Number(expense); 
-            sum += expense;
+let one = function () {
+    let gameNum = 42;
+    return function gameStart () {
+        let playerNum = prompt('Угадай число от 1 до 100');
+        while (!isNumber(playerNum) || playerNum > 100 || playerNum < 1) {
+            alert('Введи число от 1 до 100!');
+            playerNum = prompt('Угадай число от 1 до 100');
         }
-        return sum;
-    },
-    expensesMonth = getExpensesMonth(),
-    getAccumulatedMonth = function () {
-        return money - expensesMonth;
-    },
-    accumulatedMonth = getAccumulatedMonth(),
-    getTargetMonth = function () {
-        return Math.ceil(mission / accumulatedMonth);
-    },
-    targetMonth = getTargetMonth(),
-    budgetDay = Math.floor(accumulatedMonth / 30),
-    getStatusIncome = function () {
-        if (budgetDay > 1200) {
-            console.log('У вас высокий уровень дохода');
-        } else if (budgetDay > 600 && budgetDay <= 1200) {
-            console.log('У вас средний уровень дохода');
-        } else if (budgetDay >= 0 && budgetDay <= 600) {
-            console.log('К сожалению у вас уровень дохода ниже среднего');
-        } else {
-            console.log('Что то пошло не так');
-        }        
+        playerNum = Number(playerNum);
+        if (playerNum === gameNum) {
+            alert('Поздравляю, Вы угадали!!!');
+        } else if (playerNum > gameNum) {
+            alert('Загаданное число меньше');
+            gameStart(); 
+        } else if (playerNum < gameNum) {
+            alert('Загаданное число больше');
+            gameStart();  
+        }
     };
+};
 
-console.log(showTypeOf(money));
-console.log(showTypeOf(income));
-console.log(showTypeOf(deposit));
-console.log(`Доход за месяц ${money} рублей`);
-console.log(`Расходы за месяц ${expensesMonth} рублей`);
-console.log(addExpenses.toLowerCase().split(', '));
-console.log(`Цель заработать ${mission} рублей`);
-if (targetMonth >= 0) {
-    console.log(`Цель будет достигнута за ${targetMonth} месяцев(а)`);    
-} else {
-    console.log(`Цель не будет достигнута`);    
-}
-console.log(`Бюджет на месяц: ${accumulatedMonth} рублей`);
-console.log(`Бюджет на день: ${budgetDay} рублей`);
-getStatusIncome();
+const two = one();
+two();
