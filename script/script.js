@@ -9,8 +9,8 @@ const
     capitalizeFirstLetter = function (arr) {
         let newArr = [];
         arr.forEach( function (element) {
-            element.charAt(0).toUpperCase() + element.slice(1);
-            newArr.push(element);       
+            const newElem = element.charAt(0).toUpperCase() + element.slice(1);
+            newArr.push(newElem);       
         });
         return newArr;     
     },
