@@ -9,10 +9,9 @@ const
     capitalizeFirstLetter = function (arr) {
         let newArr = [];
         arr.forEach( function (element) {
-            const newElem = element.charAt(0).toUpperCase() + element.slice(1);
-            newArr.push(newElem);       
+            newArr.push(element.charAt(0).toUpperCase() + element.slice(1));       
         });
-        return newArr;     
+        return newArr;
     },
     start = function () {
         do {
@@ -127,10 +126,7 @@ console.log(`Бюджет на месяц: ${appData.budgetMonth} рублей`)
 console.log(`Бюджет на день: ${appData.budgetDay} рублей`);
 appData.getStatusIncome();
 
-console.log(appData.addExpenses);
-console.log(capitalizeFirstLetter(appData.addExpenses));
-
-console.log(`Add expenses: ${appData.addExpenses.join(', ')}`);
+console.log(`Add expenses: ${capitalizeFirstLetter(appData.addExpenses).join(', ')}`);
 
 for (const key in appData) {
     console.log(`${key}: ${appData[key]}`);
