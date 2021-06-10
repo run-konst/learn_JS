@@ -53,6 +53,9 @@ let appData = {
     percentDeposit: 0,
     moneyDeposit: 0,
     start: function () {
+        if (!isNumber(salaryAmount.value)) {
+            return;            
+        }
         appData.budget = Number(salaryAmount.value);
         appData.getExpenses();
         appData.getIncome();
@@ -172,11 +175,4 @@ plusBtnExpenses.addEventListener('click', appData.addExpensesBlock);
 plusBtnIncome.addEventListener('click', appData.addIncomeBlock);
 periodSelect.addEventListener('input', function () {
     periodAmount.textContent = periodSelect.value;
-});
-salaryAmount.addEventListener('change', function () {
-    if (salaryAmount.value === '') {
-        calcBtn.disabled = true;
-    } else {
-        calcBtn.disabled = false;
-    }
 });
