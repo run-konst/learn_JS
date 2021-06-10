@@ -36,7 +36,23 @@ const
             newArr.push(element.charAt(0).toUpperCase() + element.slice(1));       
         });
         return newArr;
+    },
+    validate = function () {
+        const numFields = document.querySelectorAll('[placeholder="Сумма"]');
+        numFields.forEach(function (elem) {
+            elem.addEventListener('input', function(){
+                elem.value = elem.value.replace(/[^0-9]/g, "");
+            });
+        });
+        const stringFields = document.querySelectorAll('[placeholder="Наименование"]');    
+        stringFields.forEach(function (elem) {
+            elem.addEventListener('input', function(){
+                elem.value = elem.value.replace(/[^а-яА-ЯёЁ\s.,]/g, "");
+            });  
+        });  
     };
+
+validate();
 
 let appData = {
     budget: 0,
@@ -69,6 +85,7 @@ let appData = {
         clonedExpensesItem.querySelector('.expenses-amount').value = '';
         expensesItems[0].parentNode.insertBefore(clonedExpensesItem, plusBtnExpenses);
         expensesItems = document.querySelectorAll('.expenses-items');
+        validate();
         if (expensesItems.length === 3) {
             plusBtnExpenses.style.display = 'none';            
         }      
@@ -89,6 +106,7 @@ let appData = {
         clonedIncomeItem.querySelector('.income-amount').value = '';
         incomeItems[0].parentNode.insertBefore(clonedIncomeItem, plusBtnIncome);
         incomeItems = document.querySelectorAll('.income-items');
+        validate();
         if (incomeItems.length === 3) {
             plusBtnIncome.style.display = 'none';            
         }      
@@ -184,29 +202,3 @@ salaryAmount.addEventListener('change', function () {
         calcBtn.disabled = false;
     }
 });
-
-//Валидация
-
-const numFields = document.querySelectorAll('[placeholder="Сумма"]');
-
-numFields.forEach(function (elem) {
-    elem.addEventListener('keydown', function(event){
-        if( !event.key.match(/[0-9]/) ) {
-            event.preventDefault();
-        }
-    });    
-});
-
-const stringFields = document.querySelectorAll('[placeholder="Наименование"]');
-
-stringFields.forEach(function (elem) {
-    elem.addEventListener('keydown', function(event){
-        if( !event.key.match(/[а-яА-ЯёЁ]/) ) {
-            event.preventDefault();
-        }
-    });
-    elem.addEventListener('input', function(){
-        elem.value = elem.value.replace(/[0-9]/g, "");
-    });  
-});
-
