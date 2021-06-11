@@ -162,6 +162,7 @@ const appData = {
         this.addIncome = capitalizeFirstLetter(someArr);
     },
     showResults: function () {
+        const _this = this;
         budgetMonth.value = this.budgetMonth;
         budgetDay.value = this.budgetDay;
         expensesMonth.value = this.expensesMonth;
@@ -170,7 +171,7 @@ const appData = {
         targetMonth.value = this.targetMonth;
         incomePeriodValue.value = this.calcSavedMoney();
         periodSelect.addEventListener('input', function () {
-            incomePeriodValue.value = appData.calcSavedMoney();            
+            incomePeriodValue.value = _this.calcSavedMoney();            
         });
     },
     getBudget: function () {
