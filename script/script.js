@@ -56,7 +56,7 @@ const
 
 validate();
 
-let appData = {
+const appData = {
     budget: 0,
     income: {},
     addIncome: [],
@@ -241,7 +241,7 @@ let appData = {
         if (this.deposit) {
             do {
                 this.percentDeposit = prompt('Какой годовой процент?');
-            } while (!isNumber(appData.percentDeposit));
+            } while (!isNumber(this.percentDeposit));
             this.percentDeposit = Number(this.percentDeposit);
             do {
                 this.moneyDeposit = prompt('Какая сумма заложена?');
@@ -251,16 +251,8 @@ let appData = {
     }
 };
 
-const start = function () {
-    appData.start.call(appData);
-};
-
-const reset = function () {
-    appData.reset.call(appData);
-};
-
-calcBtn.addEventListener('click', start);
-cancelBtn.addEventListener('click', reset);
+calcBtn.addEventListener('click', appData.start.bind(appData));
+cancelBtn.addEventListener('click', appData.reset.bind(appData));
 plusBtnExpenses.addEventListener('click', appData.addExpensesBlock);
 plusBtnIncome.addEventListener('click', appData.addIncomeBlock);
 periodSelect.addEventListener('input', function () {
