@@ -114,7 +114,7 @@ const appData = {
             let expensesTitle = item.querySelector('.expenses-title').value;
             let expensesAmount = item.querySelector('.expenses-amount').value;
             this.expenses[expensesTitle] = Number(expensesAmount);
-        }, appData);
+        }, this);
         for (const key in this.expenses) {
             this.expensesMonth += this.expenses[key];
         }
@@ -135,7 +135,7 @@ const appData = {
             let incomeTitle = item.querySelector('.income-title').value;
             let incomeAmount = item.querySelector('.income-amount').value;
             this.income[incomeTitle] = Number(incomeAmount);
-        }, appData);
+        }, this);
         for (const key in this.income) {
             this.incomeMonth += this.income[key];
         }
@@ -170,9 +170,6 @@ const appData = {
         addIncomeValue.value = this.addIncome.join(', ');
         targetMonth.value = this.targetMonth;
         incomePeriodValue.value = this.calcSavedMoney();
-        periodSelect.addEventListener('input', function () {
-            incomePeriodValue.value = _this.calcSavedMoney();            
-        });
     },
     getBudget: function () {
         this.budgetMonth = this.budget + this.incomeMonth - this.expensesMonth;
@@ -183,6 +180,10 @@ const appData = {
     },
     calcSavedMoney: function () {
         return this.budgetMonth * periodSelect.value;
+    },
+    changePeriod: function () {
+        periodAmount.textContent = periodSelect.value;
+        incomePeriodValue.value = this.calcSavedMoney();
     },
     blockInputs: function () {
         const textFields = document.querySelectorAll('input[type=text]');
@@ -256,9 +257,7 @@ calcBtn.addEventListener('click', appData.start.bind(appData));
 cancelBtn.addEventListener('click', appData.reset.bind(appData));
 plusBtnExpenses.addEventListener('click', appData.addExpensesBlock);
 plusBtnIncome.addEventListener('click', appData.addIncomeBlock);
-periodSelect.addEventListener('input', function () {
-    periodAmount.textContent = periodSelect.value;
-});
+periodSelect.addEventListener('input', appData.changePeriod.bind(appData));
 salaryAmount.addEventListener('input', function () {
     if (salaryAmount.value === '') {
         calcBtn.disabled = true;
