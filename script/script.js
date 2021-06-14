@@ -184,7 +184,8 @@ class AppData {
         periodAmount.textContent = periodSelect.value;
         incomePeriodValue.value = this.calcSavedMoney();
     }
-    blockInputs() {
+    blockInputs() {        
+        const textFields = document.querySelectorAll('input[type=text]');
         textFields.forEach(item => {
             item.disabled = true;            
         });
