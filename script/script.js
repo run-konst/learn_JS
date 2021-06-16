@@ -99,6 +99,9 @@ class AppData {
         this.incomeMonth = 0;
         this.expensesMonth = 0;
         this.targetMonth = 0;
+        this.deposit = false;
+        this.percentDeposit = 0;
+        this.moneyDeposit = 0;
         this.resetInputs();
         this.resetHTML();
         this.showStartBtn();  
@@ -237,6 +240,10 @@ class AppData {
     resetHTML() {
         plusBtnExpenses.style.display = 'block';
         plusBtnIncome.style.display = 'block';
+        depositCheckbox.checked = false;
+        depositBank.style.display = 'none';
+        depositAmount.style.display = 'none';
+        depositPercent.style.display = 'none';
 
         for (let i = 1; i < expensesItems.length; i++) {
             expensesItems[i].remove();
@@ -244,7 +251,7 @@ class AppData {
 
         for (let i = 1; i < incomeItems.length; i++) {
             incomeItems[i].remove();
-        }    
+        }
     }
     showCancelBtn() {
         calcBtn.style.display = 'none';
@@ -282,9 +289,13 @@ class AppData {
         plusBtnIncome.addEventListener('click', this.addBlock);
         periodSelect.addEventListener('input', this.changePeriod.bind(this));
         salaryAmount.addEventListener('input', this.checkCalcStatus.bind(this));
-        depositPercent.addEventListener('input', this.checkCalcStatus.bind(this));
         depositAmount.addEventListener('input', this.checkCalcStatus.bind(this));
         depositBank.addEventListener('change', this.checkCalcStatus.bind(this));
+        depositPercent.addEventListener('input', this.checkCalcStatus.bind(this));
+        depositPercent.addEventListener('input', () => {if (depositPercent.value > 100) {
+            alert('Процент депозита не может быть больше 100');
+            depositPercent.value = '';         
+        }});
         depositCheckbox.addEventListener('change', this.checkDeposit.bind(this));
     }
 }
