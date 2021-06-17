@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         },
         updateTimer = () => {
-            const timer = setTimer('18 june 2021');
+            const timer = setTimer('19 june 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -76,5 +76,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }));
     popupClose.addEventListener('click', () => {
         popup.style.display = 'none';
+    });
+
+    //scroll
+
+    const anchors = document.querySelectorAll('a[href*="#"]');
+
+    anchors.forEach(item => {
+        item.addEventListener('click', event => {
+            event.preventDefault();
+            const blockID = item.getAttribute('href').substr(1);
+            document.getElementById(blockID).scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
     });
 });
