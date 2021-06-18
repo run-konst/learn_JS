@@ -40,56 +40,73 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Menu
 
-    const
-        menu = document.querySelector('menu'),
-        menuBtn = document.querySelector('.menu'),
-        menuClose = document.querySelector('.close-btn'),
-        menuItems = menu.querySelectorAll('li'),
-        toggleMenu = () => {
-            if (menu.style.transform === 'translate(-100%)' || !menu.style.transform) {
-                menu.style.transform = 'translate(0)';
-            } else {
-                menu.style.transform = 'translate(-100%)';
-            }
-        };
+    const showMenu = () => {
+        const
+            menu = document.querySelector('menu'),
+            menuBtn = document.querySelector('.menu'),
+            menuClose = document.querySelector('.close-btn'),
+            menuItems = menu.querySelectorAll('li'),
+            toggleMenu = () => {
+                if (menu.style.transform === 'translate(-100%)' || !menu.style.transform) {
+                    menu.style.transform = 'translate(0)';
+                } else {
+                    menu.style.transform = 'translate(-100%)';
+                }
+            };
 
-    menuBtn.addEventListener('click', toggleMenu);
-    menuClose.addEventListener('click', toggleMenu);
-    menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+        menuBtn.addEventListener('click', toggleMenu);
+        menuClose.addEventListener('click', toggleMenu);
+        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+    };
+
+    showMenu();
 
     // Popup
 
-    const
-        popup = document.querySelector('.popup'),
-        popupContent = document.querySelector('.popup-content'),
-        popupBtn = document.querySelectorAll('.popup-btn'),
-        popupClose = document.querySelector('.popup-close'),
-        showPopup = () => {
-            popupContent.style.top = (parseInt(popupContent.style.top) - 1 + '%');
-        };
+    const showPopup = () => {
+        const
+            popup = document.querySelector('.popup'),
+            popupContent = document.querySelector('.popup-content'),
+            popupBtn = document.querySelectorAll('.popup-btn'),
+            popupClose = document.querySelector('.popup-close'),
+            animatePopup = () => {
+                popupContent.style.top = (parseInt(popupContent.style.top) - 1 + '%');
+            };
 
-    popupBtn.forEach(item => item.addEventListener('click', () => {
-        popup.style.display = 'block';
-        popupContent.style.top = '100%';
-        const animate = setInterval(showPopup, 10);
-        setTimeout(() => clearInterval(animate), 900);
-    }));
-    popupClose.addEventListener('click', () => {
-        popup.style.display = 'none';
-    });
+        popupBtn.forEach(item => item.addEventListener('click', () => {
+            popup.style.display = 'block';
+            if (screen.availWidth >= 768) {
+                popupContent.style.top = '100%';
+                const animate = setInterval(animatePopup, 10);
+                setTimeout(() => clearInterval(animate), 900);
+            }
+        }));
+        popupClose.addEventListener('click', () => {
+            popup.style.display = 'none';
+        });
+    };
+
+    showPopup();
 
     //scroll
 
-    const anchors = document.querySelectorAll('a[href*="#"]');
+    const scroll = () => {
+        const
+            anchors = document.querySelectorAll('a[href*="#"]'),
+            scrollToAnchor = item => {
+                item.addEventListener('click', event => {
+                    event.preventDefault();
+                    const blockID = item.getAttribute('href').substr(1);
+                    document.getElementById(blockID).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                });
+            };
 
-    anchors.forEach(item => {
-        item.addEventListener('click', event => {
-            event.preventDefault();
-            const blockID = item.getAttribute('href').substr(1);
-            document.getElementById(blockID).scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        });
-    });
+        anchors.forEach(item => scrollToAnchor(item));
+    };
+
+    scroll();
+
 });
