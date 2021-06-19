@@ -73,8 +73,7 @@ class AppData {
     start() {
         this.budget = Number(salaryAmount.value);
         this.getExpInc();
-        this.getAddExpenses();
-        this.getAddIncome();
+        this.getAddExpInc();
         this.getBudget();
         this.getTargetMonth();
         this.showResults();
@@ -128,27 +127,25 @@ class AppData {
         for (const key in this.expenses) {
             this.expensesMonth += this.expenses[key];
         }
-    }
-    getAddExpenses() {
+    }    
+    getAddExpInc() {
+        const foo = (arr) => {
+            let someArr = [];
+            arr.forEach(elem => {
+                elem = elem.trim();
+                if (elem !== '') {
+                    someArr.push(elem);
+                }
+            });
+            return capitalizeFirstLetter(someArr);
+        };
         let addExpenses = addExpensesItems.value.toLowerCase().split(',');
-        let someArr = [];
-        addExpenses.forEach(elem => {
-            elem = elem.trim();
-            if (elem !== '') {
-                someArr.push(elem);             
-            }
+        let addIncome = [];
+        addIncomeItems.forEach(element => {
+            addIncome.push(element.value);            
         });
-        this.addExpenses = capitalizeFirstLetter(someArr);
-    }
-    getAddIncome() {
-        let someArr = [];
-        addIncomeItems.forEach(elem => {
-            elem = elem.value.toLowerCase().trim();
-            if (elem !== '') {
-                someArr.push(elem);                
-            }          
-        });
-        this.addIncome = capitalizeFirstLetter(someArr);
+        this.addIncome = foo(addIncome);
+        this.addExpenses = foo(addExpenses);
     }
     showResults() {
         budgetMonth.value = this.budgetMonth;
