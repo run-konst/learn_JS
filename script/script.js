@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         },
         updateTimer = () => {
-            const timer = setTimer('19 june 2021');
+            const timer = setTimer('24 june 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -43,9 +43,6 @@ window.addEventListener('DOMContentLoaded', () => {
     const showMenu = () => {
         const
             menu = document.querySelector('menu'),
-            menuBtn = document.querySelector('.menu'),
-            menuClose = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('li'),
             toggleMenu = () => {
                 if (menu.style.transform === 'translate(-100%)' || !menu.style.transform) {
                     menu.style.transform = 'translate(0)';
@@ -53,10 +50,18 @@ window.addEventListener('DOMContentLoaded', () => {
                     menu.style.transform = 'translate(-100%)';
                 }
             };
-
-        menuBtn.addEventListener('click', toggleMenu);
-        menuClose.addEventListener('click', toggleMenu);
-        menuItems.forEach(item => item.addEventListener('click', toggleMenu));
+        
+        window.addEventListener('click', (event) => {
+            let menuTarget = event.target.closest('menu');
+            let menuBtn = event.target.closest('.menu');
+            let menuItem = event.target.closest('menu a');
+            let closeBtn = event.target.closest('.close-btn');
+            if (menuBtn || closeBtn || menuItem) {
+                toggleMenu();
+            } else if (menu.style.transform === 'translate(0px)' && !menuTarget) {
+                toggleMenu();
+            }
+        });
     };
 
     showMenu();
@@ -68,7 +73,6 @@ window.addEventListener('DOMContentLoaded', () => {
             popup = document.querySelector('.popup'),
             popupContent = document.querySelector('.popup-content'),
             popupBtn = document.querySelectorAll('.popup-btn'),
-            popupClose = document.querySelector('.popup-close'),
             animatePopup = () => {
                 popupContent.style.top = (parseInt(popupContent.style.top) - 1 + '%');
             };
@@ -81,8 +85,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => clearInterval(animate), 900);
             }
         }));
-        popupClose.addEventListener('click', () => {
-            popup.style.display = 'none';
+        popup.addEventListener('click', (event) => {
+            let target = event.target;
+            if (target.classList.contains('popup-close')) {
+                popup.style.display = 'none';
+            } else {
+                target = target.closest('.popup-content');
+                if (!target) {
+                    popup.style.display = 'none';                    
+                }
+            }
         });
     };
 
@@ -108,5 +120,39 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     scroll();
+    
+    //tabs
+    
+    const tabs = () => {
+        const
+            tabHeader = document.querySelector('.service-header'),
+            tabs = document.querySelectorAll('.service-header-tab'),
+            tabContent = document.querySelectorAll('.service-tab'),
+            toggleTabContent = (index) => {
+                tabContent.forEach( (item, i) => {
+                    if (index === i) {
+                        item.classList.remove('d-none');
+                        tabs[i].classList.add('active');
+                    } else {
+                        item.classList.add('d-none');
+                        tabs[i].classList.remove('active');
+                    }
+                });
+            };
+
+        tabHeader.addEventListener('click', (event) => {
+            let target = event.target.closest('.service-header-tab');
+            if (target) {            
+                tabs.forEach( (item, i) => {
+                    if (target === item) {
+                        toggleTabContent(i);                   
+                    }
+                });
+                
+            }
+        });
+    };
+    
+    tabs();    
 
 });
