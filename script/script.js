@@ -4,6 +4,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
+    let timeRemaining = 0;
+
     const
         timerHours = document.querySelector('#timer-hours'),
         timerMinutes = document.querySelector('#timer-minutes'),
@@ -13,15 +15,16 @@ window.addEventListener('DOMContentLoaded', () => {
             const
                 dateNow = new Date().getTime(),
                 dateStop = new Date(deadline).getTime(),
-                timeRemaining = (dateStop - dateNow) / 1000,
                 seconds = Math.floor(timeRemaining % 60),
                 minutes = Math.floor((timeRemaining / 60) % 60),
                 hours = Math.floor(timeRemaining / 3600);
+
+            timeRemaining = (dateStop - dateNow) / 1000;
             return { seconds, minutes, hours, timeRemaining };
 
         },
         updateTimer = () => {
-            const timer = setTimer('25 june 2021');
+            const timer = setTimer('24 june 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -31,12 +34,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 timerHours.textContent = '00';
                 timerMinutes.textContent = '00';
                 timerSeconds.textContent = '00';
-                clearInterval(int);
             }
         };
 
     updateTimer();
     const int = setInterval(updateTimer, 1000);
+    if (timeRemaining < 0) {
+        clearInterval(int);
+    }
 
     // Menu
 
@@ -265,5 +270,64 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     changeCommandImages();
+
+    const validate = () => {
+        const
+            allFields = document.querySelectorAll('input'),
+            squareField = document.querySelector('.calc-square'),
+            countField = document.querySelector('.calc-count'),
+            dayField = document.querySelector('.calc-day'),
+            nameFields = document.querySelectorAll('[placeholder="Ваше имя"]'),
+            mailFields = document.querySelectorAll('.form-email'),
+            phoneFields = document.querySelectorAll('.form-phone'),
+            messageField = document.getElementById('form2-message'),
+            validateOnlyNums = function() {
+                this.value = this.value.replace(/[^\d]/g, "");
+            },
+            validateCyr = function() {
+                this.value = this.value.replace(/[^а-яА-ЯёЁ\s-]/g, "");
+            },
+            validateMail = function() {
+                this.value = this.value.replace(/[^a-zA-Z@_!~.'*-]/g, "");
+            },
+            validatePhone = function() {
+                this.value = this.value.replace(/[^\d()-]/g, "");
+            },
+            replaceRules = function() {
+                let str = this.value = this.value.replace(/\s+/g, " ");
+                str = str.replace(/-+/g, "-");
+                while (str.match(/^ /) || str.match(/^-/)) {
+                    str = str.replace(/^ /, "");
+                    str = str.replace(/^-/, "");
+                }
+                while (str.match(/ $/) || str.match(/-$/)) {
+                    str = str.replace(/ $/, "");
+                    str = str.replace(/-$/, "");
+                }
+                this.value = str;
+            },
+            capitalizeFirstLetters = function() {
+                const str = this.value = this.value.replace(/./g, match => match.toLowerCase());
+                const arr = str.split(' ');
+                const newArr = [];
+                arr.forEach(item => {
+                    item = item.replace(/./, match => match.toUpperCase());
+                    newArr.push(item);
+                });
+                this.value = newArr.join(' ');
+            };
+
+        squareField.addEventListener('input', validateOnlyNums);
+        countField.addEventListener('input', validateOnlyNums);
+        dayField.addEventListener('input', validateOnlyNums);
+        nameFields.forEach(item => item.addEventListener('input', validateCyr));
+        mailFields.forEach(item => item.addEventListener('input', validateMail));
+        phoneFields.forEach(item => item.addEventListener('input', validatePhone));
+        messageField.addEventListener('input', validateCyr);
+        allFields.forEach(item => item.addEventListener('blur', replaceRules));
+        nameFields.forEach(item => item.addEventListener('blur', capitalizeFirstLetters));
+    };
+
+    validate();
 
 });
