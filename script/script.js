@@ -21,7 +21,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         },
         updateTimer = () => {
-            const timer = setTimer('24 june 2021');
+            const timer = setTimer('25 june 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -50,8 +50,8 @@ window.addEventListener('DOMContentLoaded', () => {
                     menu.style.transform = 'translate(-100%)';
                 }
             };
-        
-        window.addEventListener('click', (event) => {
+
+        window.addEventListener('click', event => {
             const menuTarget = event.target.closest('menu');
             const menuBtn = event.target.closest('.menu');
             const menuItem = event.target.closest('menu a');
@@ -85,14 +85,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => clearInterval(animate), 900);
             }
         }));
-        popup.addEventListener('click', (event) => {
+        popup.addEventListener('click', event => {
             let target = event.target;
             if (target.classList.contains('popup-close')) {
                 popup.style.display = 'none';
             } else {
                 target = target.closest('.popup-content');
                 if (!target) {
-                    popup.style.display = 'none';                    
+                    popup.style.display = 'none';
                 }
             }
         });
@@ -107,7 +107,7 @@ window.addEventListener('DOMContentLoaded', () => {
             anchors = document.querySelectorAll('a[href*="#"]'),
             scrollToAnchor = item => {
                 if (item.getAttribute('href') === '#') {
-                    return;                    
+                    return;
                 }
                 item.addEventListener('click', event => {
                     event.preventDefault();
@@ -123,16 +123,16 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     scroll();
-    
+
     //tabs
-    
+
     const tabs = () => {
         const
             tabHeader = document.querySelector('.service-header'),
             tabs = document.querySelectorAll('.service-header-tab'),
             tabContent = document.querySelectorAll('.service-tab'),
-            toggleTabContent = (index) => {
-                tabContent.forEach( (item, i) => {
+            toggleTabContent = index => {
+                tabContent.forEach((item, i) => {
                     if (index === i) {
                         item.classList.remove('d-none');
                         tabs[i].classList.add('active');
@@ -143,19 +143,19 @@ window.addEventListener('DOMContentLoaded', () => {
                 });
             };
 
-        tabHeader.addEventListener('click', (event) => {
-            let target = event.target.closest('.service-header-tab');
-            if (target) {            
-                tabs.forEach( (item, i) => {
+        tabHeader.addEventListener('click', event => {
+            const target = event.target.closest('.service-header-tab');
+            if (target) {
+                tabs.forEach((item, i) => {
                     if (target === item) {
-                        toggleTabContent(i);                   
+                        toggleTabContent(i);
                     }
                 });
-                
+
             }
         });
     };
-    
+
     tabs();
 
     const slider = () => {
@@ -167,10 +167,10 @@ window.addEventListener('DOMContentLoaded', () => {
                 for (let i = 0; i < slides.length; i++) {
                     const dot = document.createElement('li');
                     dot.classList.add('dot');
-                    dotsContainer.append(dot);                    
+                    dotsContainer.append(dot);
                 }
             };
-            
+
         createDots();
 
         const dots = document.querySelectorAll('.dot');
@@ -179,7 +179,7 @@ window.addEventListener('DOMContentLoaded', () => {
         let currentSlide = 0;
         let interval;
 
-        const            
+        const
             hideSlide = () => {
                 slides[currentSlide].classList.remove('portfolio-item-active');
                 dots[currentSlide].classList.remove('dot-active');
@@ -206,9 +206,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 clearInterval(interval);
             };
 
-        wrapper.addEventListener('click', (event) => {
+        wrapper.addEventListener('click', event => {
             event.preventDefault();
-            let target = event.target;
+            const target = event.target;
             if (!target.matches('.portfolio-btn, .dot')) {
                 return;
             }
@@ -218,7 +218,7 @@ window.addEventListener('DOMContentLoaded', () => {
             } else if (target.matches('#arrow-left')) {
                 currentSlide--;
             } else if (target.matches('.dot')) {
-                dots.forEach( (item, i) => {
+                dots.forEach((item, i) => {
                     if (item === target) {
                         currentSlide = i;
                     }
@@ -227,13 +227,13 @@ window.addEventListener('DOMContentLoaded', () => {
             showSlide();
         });
 
-        wrapper.addEventListener('mouseover', (event) => {
+        wrapper.addEventListener('mouseover', event => {
             if (event.target.matches('.portfolio-btn, .dot')) {
                 stopAutoplay();
             }
         });
 
-        wrapper.addEventListener('mouseout', (event) => {
+        wrapper.addEventListener('mouseout', event => {
             if (event.target.matches('.portfolio-btn, .dot')) {
                 startAutoplay(2000);
             }
@@ -243,5 +243,27 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     slider();
+
+    const changeCommandImages = () => {
+        const
+            commandImages = document.querySelectorAll('.command__photo'),
+            changeImage = image => {
+                image.dataset.oldImg = image.src;
+                image.src = image.dataset.img;
+            },
+            returnImage = image => {
+                image.src = image.dataset.oldImg;
+            };
+
+        commandImages.forEach(image =>  {
+            image.addEventListener('mouseenter', () => changeImage(image));
+        });
+        commandImages.forEach(image =>  {
+            image.addEventListener('mouseleave', () => returnImage(image));
+        });
+
+    };
+
+    changeCommandImages();
 
 });
