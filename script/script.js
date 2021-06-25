@@ -163,6 +163,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     tabs();
 
+    //slider
+
     const slider = () => {
         const
             wrapper = document.querySelector('.portfolio-content'),
@@ -249,6 +251,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
     slider();
 
+    //images
+
     const changeCommandImages = () => {
         const
             commandImages = document.querySelectorAll('.command__photo'),
@@ -270,6 +274,8 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     changeCommandImages();
+
+    //validate
 
     const validate = () => {
         const
@@ -329,5 +335,46 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     validate();
+
+    //calc
+
+    const calc = (price) => {
+        const
+            calcItems = document.querySelectorAll('.calc-item'),
+            selectType = document.querySelector('.calc-type'),
+            square = document.querySelector('.calc-square'),
+            count = document.querySelector('.calc-count'),
+            days = document.querySelector('.calc-day'),
+            total = document.getElementById('total'),
+            countSum = () => {
+                let
+                    sum = 0,
+                    countValue = 1,
+                    daysValue = 1;
+                const
+                    selectValue = selectType.options[selectType.selectedIndex].value,
+                    squareValue = square.value;
+
+                if (count.value) {
+                    countValue += (count.value - 1) / 10;
+                }
+
+                if (days.value && days.value <= 5) {
+                    daysValue *= 2;
+                } else if (days.value && days.value <= 10) {
+                    daysValue *= 1.5;
+                }
+
+                if (selectValue && squareValue) {
+                    sum = price * selectValue * squareValue * countValue * daysValue;
+                }
+
+                total.textContent = Math.floor(sum);
+            };
+
+        calcItems.forEach(item => item.addEventListener('change', countSum));
+    };
+
+    calc(100);
 
 });
