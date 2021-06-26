@@ -339,6 +339,9 @@ window.addEventListener('DOMContentLoaded', () => {
     //calc
 
     const calc = price => {
+        let
+            intID,
+            timeoutID;
         const
             calcItems = document.querySelectorAll('.calc-item'),
             selectType = document.querySelector('.calc-type'),
@@ -347,13 +350,32 @@ window.addEventListener('DOMContentLoaded', () => {
             days = document.querySelector('.calc-day'),
             total = document.getElementById('total'),
             countSum = () => {
+                clearInterval(intID);
+                clearTimeout(timeoutID);
                 let
                     sum = 0,
                     countValue = 1,
                     daysValue = 1;
                 const
                     selectValue = selectType.options[selectType.selectedIndex].value,
-                    squareValue = square.value;
+                    squareValue = square.value,
+                    animateNumbers = (number, elem, time = 1000, speed = 10) => {
+                        elem.textContent = 0;
+                        if (time % speed !== 0) {
+                            speed = 20;
+                        }
+                        const
+                            iterations = time / speed,
+                            numberPart = number / iterations;
+                        let i = numberPart;
+                        intID = setInterval(() => {
+                            elem.textContent = Math.round(i);
+                            i += numberPart;
+                        }, speed);
+                        timeoutID = setTimeout(() => {
+                            clearInterval(intID);
+                        }, time);
+                    };
 
                 if (count.value) {
                     countValue += (count.value - 1) / 10;
@@ -366,25 +388,16 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (selectValue && squareValue) {
-                    sum = Math.floor(price * selectValue * squareValue * countValue * daysValue);
+                    sum = Math.round(price * selectValue * squareValue * countValue * daysValue);
+                    animateNumbers(sum, total, 3000);
+                } else {
+                    total.textContent = 0;
                 }
-
-                const animateNumbers = (number, elem, time = 1000, speed = 10) => {
-                    const iterations = time / speed;
-                    const numberPart = number / iterations;
-                    for (let i = 1; i <= iterations; i++) {
-                        setTimeout(() => { elem.textContent = Math.floor(numberPart * i); }, speed * i);
-                    }
-                };
-
-                animateNumbers(sum, total, 500);
-
-
             };
 
         calcItems.forEach(item => item.addEventListener('change', countSum));
     };
 
-    calc(50);
+    calc(1.4);
 
 });
