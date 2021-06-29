@@ -425,7 +425,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
             const
                 formData = new FormData(form),
-                data = {};
+                data = {},
+                inputs = form.querySelectorAll('input');
             formData.forEach((value, key) => {
                 data[key] = value;
             });
@@ -433,6 +434,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 () => {
                     statusMessage.classList.remove('sk-wave');
                     statusMessage.textContent = successMessage;
+                    inputs.forEach(input => input.value = '');
                 },
                 (error) => {
                     statusMessage.classList.remove('sk-wave');
