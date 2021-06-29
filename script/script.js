@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         },
         updateTimer = () => {
-            const timer = setTimer('24 june 2021');
+            const timer = setTimer('30 june 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -290,14 +290,17 @@ window.addEventListener('DOMContentLoaded', () => {
             validateOnlyNums = function() {
                 this.value = this.value.replace(/[^\d]/g, "");
             },
-            validateCyr = function() {
-                this.value = this.value.replace(/[^а-яА-ЯёЁ\s-]/g, "");
+            validateName = function() {
+                this.value = this.value.replace(/[^а-яА-ЯёЁ\s]/g, "");
+            },
+            validateMessage = function() {
+                this.value = this.value.replace(/[^а-яА-ЯёЁ\d\s-.,!?]/g, "");
             },
             validateMail = function() {
                 this.value = this.value.replace(/[^a-zA-Z@_!~.'*-]/g, "");
             },
             validatePhone = function() {
-                this.value = this.value.replace(/[^\d()-]/g, "");
+                this.value = this.value.replace(/[^\d+]/g, "");
             },
             replaceRules = function() {
                 let str = this.value = this.value.replace(/\s+/g, " ");
@@ -326,10 +329,10 @@ window.addEventListener('DOMContentLoaded', () => {
         squareField.addEventListener('input', validateOnlyNums);
         countField.addEventListener('input', validateOnlyNums);
         dayField.addEventListener('input', validateOnlyNums);
-        nameFields.forEach(item => item.addEventListener('input', validateCyr));
+        nameFields.forEach(item => item.addEventListener('input', validateName));
         mailFields.forEach(item => item.addEventListener('input', validateMail));
         phoneFields.forEach(item => item.addEventListener('input', validatePhone));
-        messageField.addEventListener('input', validateCyr);
+        messageField.addEventListener('input', validateMessage);
         allFields.forEach(item => item.addEventListener('blur', replaceRules));
         nameFields.forEach(item => item.addEventListener('blur', capitalizeFirstLetters));
     };
@@ -389,7 +392,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 if (selectValue && squareValue) {
                     sum = Math.round(price * selectValue * squareValue * countValue * daysValue);
-                    animateNumbers(sum, total, 3000);
+                    animateNumbers(sum, total, 500);
                 } else {
                     total.textContent = 0;
                 }
@@ -398,6 +401,65 @@ window.addEventListener('DOMContentLoaded', () => {
         calcItems.forEach(item => item.addEventListener('change', countSum));
     };
 
-    calc(1.4);
+    calc(50);
+
+    //send form
+
+    const sendForm = () => {
+        const
+            forms = document.querySelectorAll('form'),
+            statusMessage = document.createElement('div'),
+            successMessage = 'Ваша заявка отправлена',
+            errorMessage = 'Что-то пошло не так';
+
+        forms.forEach(form => form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.classList.add('sk-wave');
+            statusMessage.innerHTML = `
+                <div class="sk-rect sk-rect-1"></div>
+                <div class="sk-rect sk-rect-2"></div>
+                <div class="sk-rect sk-rect-3"></div>
+                <div class="sk-rect sk-rect-4"></div>
+                <div class="sk-rect sk-rect-5"></div>`;
+
+            const
+                formData = new FormData(form),
+                data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+            postData(data,
+                () => {
+                    statusMessage.classList.remove('sk-wave');
+                    statusMessage.textContent = successMessage;
+                },
+                (error) => {
+                    statusMessage.classList.remove('sk-wave');
+                    statusMessage.textContent = errorMessage;
+                    console.log(error);
+                }
+            );
+        }));
+
+        const postData = (data, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(data));
+        };
+    };
+
+    sendForm();
 
 });
