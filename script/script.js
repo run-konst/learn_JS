@@ -407,15 +407,16 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const sendForm = () => {
         const
-            forms = document.querySelectorAll('form'),
             statusMessage = document.createElement('div'),
             successMessage = 'Ваша заявка отправлена',
-            errorMessage = 'Что-то пошло не так';
+            errorMessage = 'Что-то пошло не так',
+            removeMessage = () => { statusMessage.textContent = ''; };
 
-        forms.forEach(form => form.addEventListener('submit', event => {
+        document.addEventListener('submit', event => {
             event.preventDefault();
+            const form = event.target;
             form.appendChild(statusMessage);
-            statusMessage.classList.add('sk-wave');
+            statusMessage.classList.add('sk-wave', 'status-message');
             statusMessage.innerHTML = `
                 <div class="sk-rect sk-rect-1"></div>
                 <div class="sk-rect sk-rect-2"></div>
@@ -435,14 +436,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     statusMessage.classList.remove('sk-wave');
                     statusMessage.textContent = successMessage;
                     inputs.forEach(input => input.value = '');
+                    setTimeout(removeMessage, 3000);
                 },
                 (error) => {
                     statusMessage.classList.remove('sk-wave');
                     statusMessage.textContent = errorMessage;
                     console.log(error);
+                    setTimeout(removeMessage, 3000);
                 }
             );
-        }));
+        });
 
         const postData = (data, outputData, errorData) => {
             const request = new XMLHttpRequest();
