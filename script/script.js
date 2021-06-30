@@ -410,7 +410,40 @@ window.addEventListener('DOMContentLoaded', () => {
             statusMessage = document.createElement('div'),
             successMessage = 'Ваша заявка отправлена',
             errorMessage = 'Что-то пошло не так',
-            removeMessage = () => { statusMessage.textContent = ''; };
+            removeMessage = () => { statusMessage.textContent = ''; },
+            postData = (data) => {
+                return new Promise((resolve, reject) => {
+                    const request = new XMLHttpRequest();
+                    request.addEventListener('readystatechange', () => {
+                        if (request.readyState !== 4) {
+                            return;
+                        }
+                        if (request.status === 200) {
+                            resolve(JSON.stringify(data));
+                        } else {
+                            reject(request.status);
+                        }
+                    });
+                    request.open('POST', './server.php');
+                    request.setRequestHeader('Content-Type', 'application/json');
+                    request.send(JSON.stringify(data));
+                });
+            },
+            sendData = (data) => {
+                console.log(data);
+                statusMessage.classList.remove('sk-wave');
+                statusMessage.textContent = successMessage;
+                setTimeout(removeMessage, 3000);
+            },
+            errorData = (error) => {
+                statusMessage.classList.remove('sk-wave');
+                statusMessage.textContent = errorMessage;
+                console.error(error);
+                setTimeout(removeMessage, 3000);
+            },
+            clearInputs = (inputs) => {
+                inputs.forEach(input => input.value = '');
+            };
 
         document.addEventListener('submit', event => {
             event.preventDefault();
@@ -431,38 +464,11 @@ window.addEventListener('DOMContentLoaded', () => {
             formData.forEach((value, key) => {
                 data[key] = value;
             });
-            postData(data,
-                () => {
-                    statusMessage.classList.remove('sk-wave');
-                    statusMessage.textContent = successMessage;
-                    inputs.forEach(input => input.value = '');
-                    setTimeout(removeMessage, 3000);
-                },
-                (error) => {
-                    statusMessage.classList.remove('sk-wave');
-                    statusMessage.textContent = errorMessage;
-                    console.log(error);
-                    setTimeout(removeMessage, 3000);
-                }
-            );
+            postData(data)
+                .then(sendData)
+                .catch(errorData)
+                .finally(() => clearInputs(inputs));
         });
-
-        const postData = (data, outputData, errorData) => {
-            const request = new XMLHttpRequest();
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    outputData();
-                } else {
-                    errorData(request.status);
-                }
-            });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.send(JSON.stringify(data));
-        };
     };
 
     sendForm();
