@@ -24,7 +24,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         },
         updateTimer = () => {
-            const timer = setTimer('30 june 2021');
+            const timer = setTimer('3 july 2021');
 
             if (timer.timeRemaining > 0) {
                 timerHours.textContent = addZero(timer.hours);
@@ -412,25 +412,18 @@ window.addEventListener('DOMContentLoaded', () => {
             errorMessage = 'Что-то пошло не так',
             removeMessage = () => { statusMessage.textContent = ''; },
             postData = (data) => {
-                return new Promise((resolve, reject) => {
-                    const request = new XMLHttpRequest();
-                    request.addEventListener('readystatechange', () => {
-                        if (request.readyState !== 4) {
-                            return;
-                        }
-                        if (request.status === 200) {
-                            resolve(JSON.stringify(data));
-                        } else {
-                            reject(request.status);
-                        }
-                    });
-                    request.open('POST', './server.php');
-                    request.setRequestHeader('Content-Type', 'application/json');
-                    request.send(JSON.stringify(data));
+                return fetch('./server.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
                 });
             },
             sendData = (data) => {
-                console.log(data);
+                if (data.status !== 200) {
+                    throw new Error('Network status is not 200');
+                }
                 statusMessage.classList.remove('sk-wave');
                 statusMessage.textContent = successMessage;
                 setTimeout(removeMessage, 3000);
