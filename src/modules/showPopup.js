@@ -9,7 +9,7 @@ const showPopup = () => {
 
     popupBtn.forEach(item => item.addEventListener('click', () => {
         popup.style.display = 'block';
-        if (screen.availWidth >= 768) {
+        if (document.body.offsetWidth >= 768) {
             popupContent.style.top = '100%';
             const animate = setInterval(animatePopup, 10);
             setTimeout(() => clearInterval(animate), 900);

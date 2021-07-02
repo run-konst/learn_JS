@@ -22,6 +22,11 @@ const validate = () => {
         },
         validatePhone = function() {
             this.value = this.value.replace(/[^\d+]/g, "");
+            if (this.value.match(/^7|^8/)) {
+                this.setAttribute('minlength', '11');
+            } else {
+                this.setAttribute('minlength', '12');
+            }
         },
         replaceRules = function() {
             let str = this.value = this.value.replace(/\s+/g, " ");
