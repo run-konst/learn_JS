@@ -22,10 +22,31 @@ const validate = () => {
         },
         validatePhone = function() {
             this.value = this.value.replace(/[^\d+]/g, "");
-            if (this.value.match(/^7|^8/)) {
-                this.setAttribute('minlength', '11');
+            const
+                message = document.createElement('div'),
+                formID = this.id.substr(0, 5),
+                form = document.getElementById(formID),
+                btn = form.querySelector('.form-btn');
+            message.classList.add('error-message');
+            if (this.value.match(/^7|^8/) && this.value.length <= 11) {
+                btn.disabled = true;
+                message.textContent = 'Не менее 11 символов';
+                if (!this.nextElementSibling) {
+                    this.insertAdjacentElement('afterend', message);
+                } else {
+                    this.nextElementSibling.textContent = 'Не менее 11 символов';
+                }
+            } else if (this.value.match(/^\+/) && this.value.length <= 12) {
+                btn.disabled = true;
+                message.textContent = 'Не менее 12 символов';
+                if (!this.nextElementSibling) {
+                    this.insertAdjacentElement('afterend', message);
+                } else {
+                    this.nextElementSibling.textContent = 'Не менее 12 символов';
+                }
             } else {
-                this.setAttribute('minlength', '12');
+                this.nextElementSibling.remove();
+                btn.disabled = false;
             }
         },
         replaceRules = function() {
