@@ -12,23 +12,33 @@ const validate = () => {
             this.value = this.value.replace(/[^\d]/g, "");
         },
         validateName = function() {
+            const btn = this.form.querySelector('.form-btn');
             this.value = this.value.replace(/[^а-яА-ЯёЁ\s]/g, "");
+            if (this.value.length < 2) {
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
         },
         validateMessage = function() {
             this.value = this.value.replace(/[^а-яА-ЯёЁ\d\s-.,!?]/g, "");
         },
         validateMail = function() {
             this.value = this.value.replace(/[^a-zA-Z@_!~.'*-]/g, "");
+            const btn = this.form.querySelector('.form-btn');
+            if (/^\w+@\w+\.\w{2,}$/.test(this.value)) {
+                btn.disabled = false;
+            } else {
+                btn.disabled = true;
+            }
         },
         validatePhone = function() {
             this.value = this.value.replace(/[^\d+]/g, "");
             const
                 message = document.createElement('div'),
-                formID = this.id.substr(0, 5),
-                form = document.getElementById(formID),
-                btn = form.querySelector('.form-btn');
+                btn = this.form.querySelector('.form-btn');
             message.classList.add('error-message');
-            if (this.value.match(/^7|^8/) && this.value.length <= 11) {
+            if (this.value.match(/^7|^8/) && this.value.length < 11) {
                 btn.disabled = true;
                 message.textContent = 'Не менее 11 символов';
                 if (!this.nextElementSibling) {
@@ -36,7 +46,7 @@ const validate = () => {
                 } else {
                     this.nextElementSibling.textContent = 'Не менее 11 символов';
                 }
-            } else if (this.value.match(/^\+/) && this.value.length <= 12) {
+            } else if (this.value.match(/^\+/) && this.value.length < 12) {
                 btn.disabled = true;
                 message.textContent = 'Не менее 12 символов';
                 if (!this.nextElementSibling) {
