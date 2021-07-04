@@ -45,8 +45,10 @@ const validate = () => {
                     this.nextElementSibling.textContent = 'Не менее 12 символов';
                 }
             } else {
-                this.nextElementSibling.remove();
-                btn.disabled = false;
+                if (this.nextElementSibling) {
+                    this.nextElementSibling.remove();
+                    btn.disabled = false;
+                }
             }
         },
         replaceRules = function() {
