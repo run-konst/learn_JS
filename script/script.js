@@ -87,6 +87,7 @@ class AppData {
         this.blockInputs();
         this.getStatusIncome();
         this.showCancelBtn();
+        this.saveToStorage();
     }
     reset() {
         this.budget = 0;
@@ -104,7 +105,9 @@ class AppData {
         this.moneyDeposit = 0;
         this.resetInputs();
         this.resetHTML();
-        this.showStartBtn();  
+        this.showStartBtn();
+        localStorage.clear();
+        this.deleteCookies();
     }
     addBlock() {
         const startStr = this.className.split(' ')[1].split('_')[0];
@@ -215,7 +218,7 @@ class AppData {
         periodAmount.textContent = periodSelect.value;
         incomePeriodValue.value = this.calcSavedMoney();
     }
-    blockInputs() {        
+    blockInputs() {
         const textFields = document.querySelectorAll('input[type=text]');
         textFields.forEach(item => {
             item.disabled = true;            
@@ -298,7 +301,73 @@ class AppData {
         }});
         depositCheckbox.addEventListener('change', this.checkDeposit.bind(this));
     }
+    saveToStorage() {
+        document.cookie = `budgetMonth=${budgetMonth.value}; max-age=3600`;
+        document.cookie = `budgetDay=${budgetDay.value}; max-age=3600`;
+        document.cookie = `expensesMonth=${expensesMonth.value}; max-age=3600`;
+        document.cookie = `addExpensesValue=${addExpensesValue.value}; max-age=3600`;
+        document.cookie = `addIncomeValue=${addIncomeValue.value}; max-age=3600`;
+        document.cookie = `targetMonth=${targetMonth.value}; max-age=3600`;
+        document.cookie = `incomePeriodValue=${incomePeriodValue.value}; max-age=3600`;
+        localStorage.budgetMonth = budgetMonth.value;
+        localStorage.budgetDay = budgetDay.value;
+        localStorage.expensesMonth = expensesMonth.value;
+        localStorage.addExpensesValue = addExpensesValue.value;
+        localStorage.addIncomeValue = addIncomeValue.value;
+        localStorage.targetMonth = targetMonth.value;
+        localStorage.incomePeriodValue = incomePeriodValue.value;
+    }
+    loadFromStorage() {
+        budgetMonth.value = localStorage.budgetMonth;
+        budgetDay.value = localStorage.budgetDay;
+        expensesMonth.value = localStorage.expensesMonth;
+        addExpensesValue.value = localStorage.addExpensesValue;
+        addIncomeValue.value = localStorage.addIncomeValue;
+        targetMonth.value = localStorage.targetMonth;
+        incomePeriodValue.value = localStorage.incomePeriodValue;
+        this.budgetMonth = localStorage.budgetMonth;
+    }
+    deleteCookies() {
+        document.cookie = `budgetMonth=${budgetMonth.value}; max-age=0`;
+        document.cookie = `budgetDay=${budgetDay.value}; max-age=0`;
+        document.cookie = `expensesMonth=${expensesMonth.value}; max-age=0`;
+        document.cookie = `addExpensesValue=${addExpensesValue.value}; max-age=0`;
+        document.cookie = `addIncomeValue=${addIncomeValue.value}; max-age=0`;
+        document.cookie = `targetMonth=${targetMonth.value}; max-age=0`;
+        document.cookie = `incomePeriodValue=${incomePeriodValue.value}; max-age=0`;
+    }
+    checkCookies() {
+        const cookies = document.cookie.split('; ');
+        let cookieNames = [];
+        let storageNames = [];
+        cookies.forEach(cookie => {
+            const cookieName = cookie.replace(/=(.+)?/, '');
+            cookieNames.push(cookieName);
+        });
+        for (const key in localStorage) {
+            if (Object.hasOwnProperty.call(localStorage, key)) {
+                storageNames.push(key);                
+            }
+        }
+        const cookiesSet = new Set(cookieNames);
+        console.log(cookiesSet);
+        storageNames.forEach(item => {
+            if (!cookiesSet.has(item)) {
+                console.log(item);
+                this.reset();
+            }
+        });
+    }
+    init() {
+        this.eventListeners();
+        if (localStorage.length) {
+            this.loadFromStorage();
+            this.blockInputs();
+            this.showCancelBtn();
+            this.checkCookies();     
+        }
+    }
 }
 
 const appData = new AppData();
-appData.eventListeners();
+appData.init();
