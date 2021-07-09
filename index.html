@@ -412,5 +412,29 @@
 	</div>
 </div>
 <script src="dist/main.js"></script>
+<script src="src/slider.js"></script>
+<script>
+	const slider = new Slider({
+		main: '.companies-wrapper',
+		wrap: '.companies-hor',
+		infinity: true,
+
+		responsive: [
+			{
+				breakpoint: 1024,
+				slideToShow: 3
+			},
+			{
+				breakpoint: 768,
+				slideToShow: 2
+			},
+			{
+				breakpoint: 576,
+				slideToShow: 1
+			},
+		]
+	});
+	slider.init();
+</script>
 </body>
 </html>
